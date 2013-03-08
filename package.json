@@ -1,0 +1,18 @@
+{
+  "name": "tcmonitor",
+  "version": "0.0.1",
+  "description": "Simple status monitor for TeamCity",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Johan Stenqvist",
+  "dependencies": {
+    "socket.io": "~0.9.13",
+    "express": "~3.1.0",
+    "underscore": "~1.4.4",
+    "when": "~1.8.1",
+    "request": "~2.14.0"
+  }
+}

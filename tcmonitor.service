@@ -1,0 +1,11 @@
+[Service]
+ExecStart=/usr/bin/node /srv/tcmonitor/server.js
+Restart=always
+StandardOutput=syslog
+SyslogIdentifier=tcmonitor
+User=nobody
+Group=nobody
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target 

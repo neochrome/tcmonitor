@@ -1,0 +1,55 @@
+<!doctype html>
+<html ng-app="tcmonitor">
+	<head>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.1/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<link href="reset.css" type="text/css" rel="stylesheet"/>
+		<style type="text/css">
+			body {
+				background-color: white;
+				font-family: arial;
+				font-size: 3em;
+				font-weight: bolder;
+			}
+			@keyframes failure {
+				from { background-color: white; }
+				to { background-color: red; }
+			}
+			@-webkit-keyframes failure {
+				from { background-color: white; }
+				to { background-color: red; }
+			}
+			body.failure {
+				animation: failure 1s infinite;
+				-webkit-animation: failure 1s infinite;
+			}
+			li.failure:before {	content: '\00bb';	}
+			li.failure:after { content: '\00ab'; }
+			li { color: lightgrey; margin: 0.5em; }
+			li.failure { color: black; }
+		</style>
+	</head>
+	<body ng-controller="StatusController" class="{{anyFailed&&'failure'}}">
+		<ul>
+			<li ng-repeat="build in builds" ng-class="build.status">{{ build.project }} - {{ build.name }}</li>
+		</ul>
+
+		<script>
+			angular.module('tcmonitor', []).factory('io', function(){ return io; });
+
+			var StatusController = function($scope, io){
+				$scope.builds = [];
+				var self = this;
+				self.socket = io.connect();
+				self.socket.on('last-builds', function(builds){
+					console.log(builds);
+					$scope.builds = builds;
+					$scope.anyFailed = _.chain(builds).where(function(build){ return build.status == 'failure'; }).any();
+					$scope.$apply();
+				});
+			};
+			StatusController.$inject = ['$scope', 'io'];
+		</script>
+	</body>
+</html>

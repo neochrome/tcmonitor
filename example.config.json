@@ -1,0 +1,9 @@
+{
+	"teamcity": {
+		"host":"https://tc.host.net",
+		"user":"monitor",
+		"pass":"secret"
+	},
+	"listen": 8080,
+	"refreshInterval": 60000
+}
