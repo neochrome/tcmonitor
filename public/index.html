@@ -12,22 +12,38 @@
 				font-size: 3em;
 				font-weight: bolder;
 			}
-			@keyframes failure {
+			@keyframes failure-bg {
+				from { background-color: white;}
+				to { background-color: red; }
+			}
+			@-webkit-keyframes failure-bg {
 				from { background-color: white; }
 				to { background-color: red; }
 			}
-			@-webkit-keyframes failure {
-				from { background-color: white; }
-				to { background-color: red; }
+            @keyframes failure-text {
+				from { background-color: white; font-size: 1em;}
+				to { background-color: red; font-size: 3em;}
+			}
+			@-webkit-keyframes failure-text {
+				from { background-color: white; font-size: 1em;}
+				to { background-color: red;font-size: 3em; }
 			}
 			body.failure {
-				animation: failure 3s infinite;
-				-webkit-animation: failure 3s infinite;
+				animation: failure-bg 2s ease-in-out infinite alternate;
+				-webkit-animation: failure-bg 2s ease-in-out infinite alternate;
 			}
+            li { 
+                color: lightgrey; 
+                margin: 0.5em;
+                padding-left: 1em;
+            }
+            li:before {content: '\';} 
 			li.failure:before {	content: '\00bb';	}
 			li.failure:after { content: '\00ab'; }
-			li { color: lightgrey; margin: 0.5em; }
-			li.failure { color: black; }
+            li.failure{
+                        animation: failure-text 2s ease-in-out infinite alternate;
+				-webkit-animation: failure-text 2s ease-in-out infinite alternate;
+            }
 		</style>
 	</head>
 	<body ng-controller="StatusController" class="{{anyFailed&&'failure'}}">
