@@ -73,9 +73,11 @@ var refresh = function (){
 			console.info('done');
 			lastSeenBuilds = builds;
 			io.sockets.emit('last-builds', lastSeenBuilds);
-			setTimeout(refresh, config.refreshInterval);
 		}, function failure(err){
-			console.error(err);
+			console.error('error: ', err);
+		})
+		.then(function(){
+			setTimeout(refresh, config.refreshInterval);
 		});
 	});
 };
