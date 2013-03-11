@@ -11,6 +11,9 @@
 				font-family: arial;
 				font-size: 3em;
 				font-weight: bolder;
+                position: absolute;
+                width: 100%;
+                height: 100%;
 			}
 			@keyframes failure-bg {
 				from { background-color: white;}
@@ -21,12 +24,12 @@
 				to { background-color: red; }
 			}
             @keyframes failure-text {
-				from { background-color: white; font-size: 1em;}
-				to { background-color: red; font-size: 3em;}
+				from { background-color: #fff; font-size: 1em; color: rgb(185, 29, 71);}
+				to { background-color: red; font-size: 1.2em; color: #fff;}
 			}
 			@-webkit-keyframes failure-text {
-				from { background-color: white; font-size: 1em;}
-				to { background-color: red;font-size: 3em; }
+				from { background-color: #fff; font-size: 1em; color: rgb(185, 29, 71);}
+				to { background-color: red; font-size: 1.2em; color: #fff; }
 			}
 			body.failure {
 				animation: failure-bg 2s ease-in-out infinite alternate;
@@ -35,23 +38,37 @@
             li { 
                 color: lightgrey; 
                 margin: 0.5em;
-                padding-left: 1em;
+                padding: .2em .2em .2em 0;
             }
-            li:before {content: '\';} 
-			li.failure:before {	content: '\00bb';	}
-			li.failure:after { content: '\00ab'; }
+
             li.failure{
                         animation: failure-text 2s ease-in-out infinite alternate;
 				-webkit-animation: failure-text 2s ease-in-out infinite alternate;
             }
+            li.success{
+                background-color: rgb(255, 255, 255);
+                border-radius: 4px 4px 4px 4px;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+                color: rgb(0, 163, 0);
+            }
+           #error-box,#success-box{ display: none;}
+            body.failure #error-box{ display:block;}
+            body.success #success-box{ display:block; text-align: center; color:rgb(0, 163, 0);}
+
+            .big-thumb i{font-size:15em;}
 		</style>
 	</head>
-	<body ng-controller="StatusController" class="{{anyFailed&&'failure'}}">
-		<ul>
+	<body ng-controller="StatusController" class="{{buildStatus}}">
+		<div id="error-box" class="">
+        <ul>
 			<li ng-repeat="build in builds" ng-class="build.status">{{ build.project }} - {{ build.name }}</li>
 		</ul>
-
-		<script>
+    </div>
+    <div id="success-box" class="">
+        <p class="big-thumb"><i class="icon-thumbs-up"></i><br/>ALL GOOD</p>
+    </div>
+        
+        <script>
 			angular.module('tcmonitor', []).factory('io', function(){ return io; });
 
 			var StatusController = function($scope, io){
@@ -61,7 +78,8 @@
 				self.socket.on('last-builds', function(builds){
 					console.log(builds);
 					$scope.builds = builds;
-					$scope.anyFailed = _.chain(builds).where(function(build){ return build.status == 'failure'; }).any();
+					$scope.anyFailed = _.chain(builds).where(function(build){ return build.status == 'failure'; }).any().value();
+					$scope.buildStatus = $scope.anyFailed ? 'failure' : 'success';
 					$scope.$apply();
 				});
 			};

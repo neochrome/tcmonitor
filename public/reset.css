@@ -62,12 +62,7 @@ table {
 /* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
 /* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  @font-face {
-    font-family: 'fontello';
-    src: url('../font/fontello.svg?81889212#fontello') format('svg');
-  }
-}
+
 
 [class^="icon-"]:before,
 [class*=" icon-"]:before,
@@ -86,7 +81,7 @@ li:before{
   font-variant: normal;
   text-transform: none;
 /* fix buttons height, for twitter bootstrap */
-  line-height: 1em;
+/*  line-height: 1em; */
 /* Animation center compensation - magrins should be symmetric */
 /* remove if not needed */
   margin-left: 0.2em;
@@ -96,10 +91,9 @@ li:before{
  text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3);
     background-color: #fff;
     border-radius: 50px;
-    line-height:1.5em;
     width: 1.5em;
     
 }
 
-li.success:before { content: '👍'; color:rgb(0, 163, 0); } /* '\1f44d' */
-li.failure:before { content: '👎'; color: rgb(185, 29, 71); } /* '\1f44e' */
+li.success:before, .icon-thumbs-up:before { content: '\1f44d'; color:rgb(0, 163, 0); } /* '\1f44d' */
+li.failure:before{ content: '\1f44e'; color: rgb(185, 29, 71); line-height: 1.5em;} /* '\1f44e' */
