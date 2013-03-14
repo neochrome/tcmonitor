@@ -1,6 +1,6 @@
 {
   "name": "tcmonitor",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Simple status monitor for TeamCity",
   "main": "server.js",
   "scripts": {
