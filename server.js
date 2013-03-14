@@ -36,49 +36,40 @@ var request = require('request')
 		}
 	});
 
-var getBuildTypes = function(){
+var getLastBuilds = function(){
 	var deferred = when.defer();
 	request.get(
-		config.teamcity.host + '/httpAuth/app/rest/buildTypes',
+		config.teamcity.host + '/httpAuth/app/rest/cctray/projects.xml',
 		function(err, res, body){
-			if(err) { deferred.reject(err); return; }
-			deferred.resolve(body.buildType);
+			if(err) {
+				console.error(err, res);
+				deferred.reject(err);
+				return;
+			}
+			deferred.resolve(
+				_(body.Project).map(function(project){
+					return {
+						activity: project.activity.toLowerCase(),
+						status: project.lastBuildStatus.toLowerCase(),
+						label: project.lastBuildLabel,
+						name: project.name
+					};
+				})
+			);
 	});
-	return deferred.promise;
-};
-
-var getLastBuildFor = function(type){
-	var build = {
-			name: type.name,
-			project: type.projectName,
-			status: 'unknown'
-	};
-	var deferred = when.defer();
-	request.get(
-		config.teamcity.host + type.href + '/builds?count=1',
-		function(err, res, body){
-			if(err) { deferred.reject(err); return; }
-			build.status = body.build[0].status.toLowerCase();
-			deferred.resolve(build);
-		});
 	return deferred.promise;
 };
 
 var refresh = function (){
 	console.info('refreshing...');
-	getBuildTypes().then(function(types){
-		var buildPromises = _(types).map(getLastBuildFor);
-		when.all(buildPromises).then(
-			function success(builds){
-			console.info('done');
-			lastSeenBuilds = builds;
-			io.sockets.emit('last-builds', lastSeenBuilds);
-		}, function failure(err){
-			console.error('error: ', err);
-		})
-		.then(function(){
-			setTimeout(refresh, config.refreshInterval);
-		});
+	getLastBuilds()
+	.then(function success(builds){
+		console.info('done');
+		lastSeenBuilds = builds;
+		io.sockets.emit('last-builds', lastSeenBuilds);
+	}, console.error)
+	.then(function(){
+		setTimeout(refresh, config.refreshInterval);
 	});
 };
 

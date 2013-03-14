@@ -10,7 +10,7 @@
 	<body ng-controller="StatusController" class="{{buildStatus}}">
 		<div id="error-box" class="">
 			<ul>
-				<li ng-repeat="build in builds" ng-class="build.status">{{ build.project }} - {{ build.name }}</li>
+				<li ng-repeat="build in builds" class="{{build.activity}} {{build.status}}">{{ build.name }}</li>
 			</ul>
 		</div>
 		<div id="success-box" class="">
