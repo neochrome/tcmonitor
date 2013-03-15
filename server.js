@@ -26,7 +26,7 @@ var request = require('request')
 		}
 	});
 
-var getLastBuilds = function(){
+function getLastBuilds(){
 	var deferred = when.defer();
 	request.get(
 		config.teamcity.host + '/httpAuth/app/rest/cctray/projects.xml',
@@ -50,17 +50,21 @@ var getLastBuilds = function(){
 	return deferred.promise;
 };
 
-var refresh = function (){
+function reschedule(){
+	setTimeout(refresh, config.refreshInterval);
+}
+
+function refresh(){
 	console.info('refreshing...');
 	getLastBuilds()
 	.then(function success(builds){
 		console.info('done');
 		lastSeenBuilds = builds;
-		io.sockets.emit('last-builds', lastSeenBuilds);
 	}, console.error)
-	.then(function(){
-		setTimeout(refresh, config.refreshInterval);
-	});
+	.then(function notify(){
+		io.sockets.emit('last-builds', lastSeenBuilds);
+	})
+	.then(reschedule,reschedule); //FIX: reschedule both when successfull and on failure, awaiting when's new "settled" concept
 };
 
 var lastSeenBuilds = [];
