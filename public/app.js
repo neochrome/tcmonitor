@@ -7,7 +7,6 @@ var StatusController = function($scope, io){
 	self.socket.on('last-builds', function(builds){
 		$scope.builds = builds;
 		var anyFailed = _(builds).any(function(build){ return build.status == 'failure'; });
-		console.log(anyFailed);
 		$scope.buildStatus = anyFailed ? 'failure' : 'success';
 		$scope.$apply();
 	});
