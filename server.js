@@ -1,20 +1,10 @@
-var fs = require('fs'),
-		path = require('path'),
-		config;
-try {
-	config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config.json')));
-	config.listen = config.listen;
-} catch (e) {
-	console.error('Error loading configuration: ', e);
-	process.exit(1);
-}
-
 var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
+var config = require('./config.json');
 io.configure('production', function(){
 	io.set('log level', 0);
 }).configure('development', function(){
