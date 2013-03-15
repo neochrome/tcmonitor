@@ -1,2 +1,1 @@
-scp public/index.html root@tcstatus:/srv/tcmonitor/public/index.html
-
+scp -r install.sh tcmonitor.service package.json server.js public/ root@tcstatus:/srv/tcmonitor/
