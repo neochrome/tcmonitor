@@ -60,7 +60,10 @@ function refresh(){
 	.then(function success(builds){
 		console.info('done');
 		lastSeenBuilds = builds;
-	}, console.error)
+	}, function failure(reason) {
+		console.error(reason);
+		lastSeenBuilds = [];
+	})
 	.then(function notify(){
 		io.sockets.emit('last-builds', lastSeenBuilds);
 	})
