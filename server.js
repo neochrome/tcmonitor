@@ -5,6 +5,9 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var config = require('./config.json');
+if (config.teamcity.ignore_ssl_error) {
+	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
 io.configure('production', function(){
 	io.set('log level', 0);
 }).configure('development', function(){
@@ -14,6 +17,7 @@ io.configure('production', function(){
 app.use('/', express.static(__dirname + '/public'));
 console.info('Listening on: ' + config.listen);
 server.listen(config.listen);
+
 
 var _ = require('underscore');
 var when = require('when');

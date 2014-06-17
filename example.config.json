@@ -2,7 +2,8 @@
 	"teamcity": {
 		"host":"https://tc.host.net",
 		"user":"monitor",
-		"pass":"secret"
+		"pass":"secret",
+		"ignore_ssl_error":false
 	},
 	"listen": 8080,
 	"refreshInterval": 60000
