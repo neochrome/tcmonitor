@@ -32,25 +32,25 @@ angular
 .factory('io', function () { return io; })
 .factory('demo', function () { return demo; })
 .controller('StatusController', ['$scope', 'io', 'demo', function ($scope, io, demo) {
+	$scope.buildStatus = 'unknown';
 	var setBuilds = function (builds) {
 		$scope.builds = builds;
-		var anyFailed = _(builds).any(function(build){ return build.status == 'failure'; });
+		var anyFailed = _(builds).any(function (build) { return build.status == 'failure'; });
 		$scope.buildStatus = _(builds).any()
 			? anyFailed
 				? 'failure'
 				: 'success'
 			: 'unknown';
+		$scope.$apply();
 	};
 
 	$scope.demo = false;
-	demo.onToggle(function (builds) { setBuilds(builds); $scope.$apply(); });
+	demo.onToggle(function (builds) { setBuilds(builds); });
 
-	var socket = io.connect();
-	socket.on('last-builds', function(builds){
+	var socket = io();
+	socket.on('last-builds', function (builds) {
 		if (demo.active) return;
 		setBuilds(builds);
-		$scope.$apply();
 	});
-
-	setBuilds([]);
+	socket.on('disconnect', function () { setBuilds([]); });
 }]);
