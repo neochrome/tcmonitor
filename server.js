@@ -8,11 +8,6 @@ var config = require('./config.json');
 if (config.teamcity.ignore_ssl_error) {
 	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
-io.configure('production', function(){
-	io.set('log level', 0);
-}).configure('development', function(){
-	io.set('log level', 3);
-});
 
 app.use('/', express.static(__dirname + '/public'));
 console.info('Listening on: ' + config.listen);
